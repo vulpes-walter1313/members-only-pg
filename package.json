@@ -28,6 +28,7 @@
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
     "@types/bcryptjs": "^2.4.6",
+    "@types/luxon": "^3.4.2",
     "@types/pg": "^8.11.8",
     "concurrently": "^8.2.2",
     "npm-watch": "^0.13.0",
@@ -42,6 +43,9 @@
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
+    "express-async-handler": "^1.2.0",
+    "express-validator": "^7.2.0",
+    "luxon": "^3.5.0",
     "pg": "^8.12.0"
   }
 }

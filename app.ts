@@ -7,6 +7,7 @@ import express, {
 import http from "node:http";
 import HttpError from "./lib/HttpError";
 import path from "node:path";
+import indexRouter from "./routes/indexRouter";
 
 const app = express();
 const PORT = parseInt(process.env.PORT || "3000");
@@ -18,9 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/", (req, res, next) => {
-  res.render("index", { title: "Members only club PG" });
-});
+app.get("/", indexRouter);
 
 // catch 404 and forward to error handler
 app.use("*", function (req, res, next) {
