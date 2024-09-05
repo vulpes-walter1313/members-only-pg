@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/navbar') %> 
+  <main class="bg-slate-950 px-4 py-14 min-h-screen flex flex-col gap-10">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-5xl font-bold text-slate-50 text-center"><%= title %></h1> 
+    </div>
+    <form action="/signup" method="POST" class="bg-slate-800 px-6 py-4 flex flex-col gap-4 max-w-sm w-full mx-auto rounded-md">
+      <div class="flex flex-col gap-2">
+        <label for="first_name" class="text-lg text-slate-50">First Name</label>
+        <input type="text"
+          name="first_name"
+          id="first_name"
+          required maxlength="24"
+          minlength="3"
+          class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md"
+          placeholder="Bart"
+          />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="last_name" class="text-lg text-slate-50">Last Name</label>
+        <input type="text"
+          name="last_name"
+          id="last_name"
+          required maxlength="24"
+          minlength="3"
+          class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md"
+          placeholder="Simpson"
+          />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="username" class="text-lg text-slate-50">Email</label>
+        <input type="email"
+          name="username"
+          id="username"
+          required
+          maxlength="320"
+          minlength="1"
+          class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md"
+          placeholder="ElBarto@gmail.com"
+          />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="password" class="text-lg text-slate-50">Password</label>
+        <input type="password"
+          name="password"
+          id="password"
+          required
+          minlength="8"
+          class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md"
+          placeholder="********"
+          />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="confirmPassword" class="text-lg text-slate-50">Confirm Password</label>
+        <input type="password"
+          name="confirmPassword"
+          id="confirmPassword"
+          required
+          minlength="8"
+          class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md"
+          placeholder="********"
+          />
+      </div>
+      <button type="submit" class="mt-4 px-6 py-2 bg-slate-100 text-slate-900 text-xl rounded-md">Join</button>
+    </form>
+  </main>
+</body>
+</html>
