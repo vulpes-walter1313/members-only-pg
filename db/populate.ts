@@ -9,9 +9,9 @@ async function main() {
   const client = new Client({ connectionString: process.env.DB_URI });
 
   try {
-    console.log('connecting to db...');
+    console.log("connecting to db...");
     await client.connect();
-    console.log('Connected to db');
+    console.log("Connected to db");
     const users: Pick<
       UserObject,
       "first_name" | "last_name" | "username" | "password"
