@@ -1,8 +1,11 @@
 import asyncHandler from "express-async-handler";
 import HttpError from "../lib/HttpError";
-import { query, validationResult, matchedData } from "express-validator";
+import { body, query, validationResult, matchedData } from "express-validator";
 import Posts from "../models/posts";
 import { DateTime } from "luxon";
+import Users from "../models/users";
+import bcrypt from "bcryptjs";
+import { type Request, type Response, type NextFunction } from "express";
 
 const indexGet = [
   query("page").optional().isInt(),
@@ -46,13 +49,62 @@ const indexGet = [
   }),
 ];
 
-const signupGet = [
+const signupGet = asyncHandler(async (req, res, next) => {
+  res.render("signup", { title: "Sign Up To Our VIP Message Board" });
+});
+
+const signupPost = [
+  body("first_name").trim().isLength({ min: 3, max: 24 }).escape(),
+  body("last_name").trim().isLength({ min: 3, max: 24 }).escape(),
+  body("username")
+    .trim()
+    .isEmail()
+    .custom(async (value) => {
+      const user = await Users.getUserByEmail(value);
+      if (user) {
+        throw new Error("Email already in use.");
+      }
+    }),
+  body("password").isLength({ min: 8, max: 64 }),
+  body("confirmPassword").custom((val, { req }) => {
+    return val === req.body.password;
+  }),
   asyncHandler(async (req, res, next) => {
-    res.render("signup", { title: "Sign Up To Our VIP Message Board" });
+    const valResult = validationResult(req);
+    if (!valResult.isEmpty()) {
+      console.log(
+        "indexController signupPost validErrors: ",
+        valResult.mapped(),
+      );
+      res.status(400).render("signup", {
+        title: "Sign Up To Our VIP message Board",
+        validErrors: valResult.mapped(),
+      });
+      return;
+    }
+    const { first_name, last_name, username, password } = matchedData(req);
+    // hash password
+    const passwordHash = await bcrypt.hash(password, 10);
+    // create user
+    await Users.createUser({
+      first_name,
+      last_name,
+      username,
+      password: passwordHash,
+    });
+    //redirect to login
+    res.redirect("/login");
+    return;
   }),
 ];
+
+const loginGet = (req: Request, res: Response, next: NextFunction) => {
+  res.render("login", { title: "Login to see who is posting" });
+};
 
 export default {
   indexGet,
   signupGet,
+  signupPost,
+  loginGet,
 };

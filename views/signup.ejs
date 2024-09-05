@@ -43,6 +43,9 @@
           class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md"
           placeholder="ElBarto@gmail.com"
           />
+        <% if (validErrors && validErrors.username) { %>
+          <p class="text-red-900 bg-red-100 p-2 rounded-md">Your email is invalid. Please use a real email..</p>
+        <% } %>
       </div>
       <div class="flex flex-col gap-2">
         <label for="password" class="text-lg text-slate-50">Password</label>
@@ -65,6 +68,10 @@
           class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md"
           placeholder="********"
           />
+        <% if (validErrors && validErrors.confirmPassword) { %>
+          <p class="text-red-900 bg-red-100 p-2 rounded-md">Your passwords don&apos;t match.</p>
+        <% } %>
+        <p></p>
       </div>
       <button type="submit" class="mt-4 px-6 py-2 bg-slate-100 text-slate-900 text-xl rounded-md">Join</button>
     </form>
