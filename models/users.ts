@@ -35,7 +35,7 @@ async function getUserByEmail(email: string) {
   const { rows } = await db.query(`SELECT * FROM users WHERE username = $1`, [
     email,
   ]);
-  const user = rows[0] as UserObject;
+  const user = rows[0] as UserObject | undefined;
   return user;
 }
 
