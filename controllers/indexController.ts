@@ -7,8 +7,9 @@ import Users from "../models/users";
 import bcrypt from "bcryptjs";
 import { type Request, type Response, type NextFunction } from "express";
 import { isLoggedIn } from "../middleware/authcheck";
+import passport from "passport";
 
-const indexGet = [
+export const indexGet = [
   query("page").optional().isInt(),
   asyncHandler(async (req, res, next) => {
     const valResult = validationResult(req);
@@ -51,11 +52,11 @@ const indexGet = [
   }),
 ];
 
-const signupGet = asyncHandler(async (req, res, next) => {
+export const signupGet = asyncHandler(async (req, res, next) => {
   res.render("signup", { title: "Sign Up To Our VIP Message Board" });
 });
 
-const signupPost = [
+export const signupPost = [
   body("first_name").trim().isLength({ min: 3, max: 24 }).escape(),
   body("last_name").trim().isLength({ min: 3, max: 24 }).escape(),
   body("username")
@@ -100,18 +101,34 @@ const signupPost = [
   }),
 ];
 
-const loginGet = (req: Request, res: Response, next: NextFunction) => {
+export const loginGet = (req: Request, res: Response, next: NextFunction) => {
   res.render("login", { title: "Login to see who is posting" });
 };
 
-const membershipGet = [
+export const loginPost = [
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+  }),
+];
+
+export const logoutGet = [
+  (req: Request, res: Response, next: NextFunction) => {
+    req.logout((err) => {
+      if (err) return next(err);
+      res.redirect("/");
+    });
+  },
+];
+
+export const membershipGet = [
   isLoggedIn,
   (req: Request, res: Response, next: NextFunction) => {
     res.render("membership", { title: "Become A Member Today!" });
   },
 ];
 
-const membershipPost = [
+export const membershipPost = [
   isLoggedIn,
   body("password")
     .notEmpty()
@@ -146,19 +163,9 @@ const membershipPost = [
   }),
 ];
 
-const welcomeNewMemberGet = [
+export const welcomeNewMemberGet = [
   isLoggedIn,
   (req: Request, res: Response, next: NextFunction) => {
     res.render("welcomeMember", { title: `Welcome, ${req.user?.first_name}` });
   },
 ];
-
-export default {
-  indexGet,
-  signupGet,
-  signupPost,
-  loginGet,
-  membershipGet,
-  membershipPost,
-  welcomeNewMemberGet,
-};
