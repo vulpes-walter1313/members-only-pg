@@ -18,6 +18,7 @@ export const indexGet = [
       next(error);
       return;
     }
+    const isLoggedIn = req.user !== undefined;
     const data = matchedData(req);
     let page = parseInt(data.page || "1");
     const limit = 5;
@@ -45,6 +46,7 @@ export const indexGet = [
     }
     res.render("index", {
       title: "Members Only Club",
+      isLoggedIn: isLoggedIn,
       posts: displayPosts,
       pagesArr: pagesArr,
       currentPage: page,

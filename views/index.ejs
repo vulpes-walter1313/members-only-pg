@@ -9,22 +9,52 @@
     <div class="max-w-4xl mx-auto">
       <h1 class="text-5xl font-bold text-slate-50 text-center"><%= title %></h1> 
     </div>
-    <div class="flex flex-col gap-8 max-w-xl mx-auto">
-      <!-- This is where the posts will go -->
-      <% posts.map( post => { %>
-        <div class="bg-slate-800 p-4 rounded-md flex flex-col gap-6">
-          <div class="text-slate-50">
-            <p class="font-medium"><%= post.author_name%></p>
-            <p class="text-sm font-light">Posted on <%= post.created_at %></p>
+    <% if (isLoggedIn) { %>
+      <div class="grid grid-cols-6 gap-6 max-w-5xl mx-auto items-start">
+        <div class="col-span-2 bg-slate-800 text-slate-100 p-4 rounded-md flex flex-col gap-4">
+          <!-- Sidebar-->
+          <p class="text-xl font-medium">Go To Shortcuts</p>
+          <div class="flex flex-col">
+            <a href="/membership">Become A Member</a>
+            <a href="/become-an-admin">Become An Admin</a>
           </div>
-          <div class="text-slate-100 flex flex-col gap-2">
-            <p class="text-3xl font-bold"><%= post.title %></p>
-            <p class="whitespace-pre-line"><%= post.body %>...</p>
-          </div>
-          <a class="underline text-amber-400 hover:text-amber-200" href="/posts/<%= post.id %>">Read More...</a>
+          <a href="/post/create" class="px-6 py-2 bg-slate-100 text-slate-900 text-lg self-start rounded-md">Create Post</a>
         </div>
-      <% }) %>
-    </div>
+        <div class="col-span-4 flex flex-col gap-8 max-w-xl mx-auto">
+          <!-- This is where the posts will go -->
+          <% posts.map( post => { %>
+            <div class="bg-slate-800 p-4 rounded-md flex flex-col gap-6">
+              <div class="text-slate-50">
+                <p class="font-medium"><%= post.author_name%></p>
+                <p class="text-sm font-light">Posted on <%= post.created_at %></p>
+              </div>
+              <div class="text-slate-100 flex flex-col gap-2">
+                <p class="text-3xl font-bold"><%= post.title %></p>
+                <p class="whitespace-pre-line"><%= post.body %>...</p>
+              </div>
+              <a class="underline text-amber-400 hover:text-amber-200" href="/posts/<%= post.id %>">Read More...</a>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } else { %> 
+      <div class="flex flex-col gap-8 max-w-xl mx-auto">
+        <!-- This is where the posts will go -->
+        <% posts.map( post => { %>
+          <div class="bg-slate-800 p-4 rounded-md flex flex-col gap-6">
+            <div class="text-slate-50">
+              <p class="font-medium"><%= post.author_name%></p>
+              <p class="text-sm font-light">Posted on <%= post.created_at %></p>
+            </div>
+            <div class="text-slate-100 flex flex-col gap-2">
+              <p class="text-3xl font-bold"><%= post.title %></p>
+              <p class="whitespace-pre-line"><%= post.body %>...</p>
+            </div>
+            <a class="underline text-amber-400 hover:text-amber-200" href="/posts/<%= post.id %>">Read More...</a>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
     <div class="mx-auto">
       <% pagesArr.map(num => { %>
       <a class=" text-slate-50 bg-slate-600 p-2 rounded-md <%= currentPage === num ? "font-medium" : "" %>" href="/?page=<%= num %>"><%= num%></a>
