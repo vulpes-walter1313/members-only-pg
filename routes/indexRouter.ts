@@ -20,5 +20,7 @@ router.get("/logout", (req, res, next) => {
     res.redirect("/");
   });
 });
+router.get("/membership", indexController.membershipGet);
+router.post("/membership", indexController.membershipPost);
 
 export default router;

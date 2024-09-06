@@ -6,6 +6,7 @@ import { DateTime } from "luxon";
 import Users from "../models/users";
 import bcrypt from "bcryptjs";
 import { type Request, type Response, type NextFunction } from "express";
+import { isLoggedIn } from "../middleware/authcheck";
 
 const indexGet = [
   query("page").optional().isInt(),
@@ -23,8 +24,9 @@ const indexGet = [
     const totalPages = Math.ceil(totalCount / limit);
     if (page > totalPages) page = totalPages;
     if (page <= 0) page = 1;
-
-    const posts = await Posts.getPosts(false, page, limit);
+    const seeAnonymous =
+      req.user === undefined || (req.user && req.user.is_member === false);
+    const posts = await Posts.getPosts(seeAnonymous, page, limit);
     const displayPosts = posts.map((post) => {
       return {
         ...post,
@@ -102,9 +104,53 @@ const loginGet = (req: Request, res: Response, next: NextFunction) => {
   res.render("login", { title: "Login to see who is posting" });
 };
 
+const membershipGet = [
+  isLoggedIn,
+  (req: Request, res: Response, next: NextFunction) => {
+    res.render("membership", { title: "Become A Member Today!" });
+  },
+];
+
+const membershipPost = [
+  isLoggedIn,
+  body("password")
+    .notEmpty()
+    .withMessage("You need to put a password")
+    .custom((val) => {
+      return val === process.env.MEMBERSHIP_PASSWORD!;
+    })
+    .withMessage("Password is incorrect"),
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const valResult = validationResult(req);
+    if (!valResult.isEmpty()) {
+      res.render("membership", {
+        title: "Become A Member Today!",
+        validErrors: valResult.mapped(),
+      });
+      return;
+    }
+    const { password } = matchedData(req);
+    const isPasswordMatch = password === process.env.MEMBERSHIP_PASSWORD!;
+    if (isPasswordMatch) {
+      await Users.updateUserMembership(req.user?.id!, true);
+      res.redirect("/welcome-new-member");
+      return;
+    } else {
+      // password dont watch
+      res.render("membership", {
+        title: "Become A Member Today!",
+        validErrors: valResult.mapped(),
+      });
+      return;
+    }
+  }),
+];
+
 export default {
   indexGet,
   signupGet,
   signupPost,
   loginGet,
+  membershipGet,
+  membershipPost,
 };

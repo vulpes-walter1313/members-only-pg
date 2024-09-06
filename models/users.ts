@@ -39,7 +39,19 @@ async function getUserByEmail(email: string) {
   return user;
 }
 
+async function updateUserMembership(id: string, membership: boolean) {
+  await db.query(
+    `
+    UPDATE users
+    SET is_member = $1
+    WHERE id = $2
+    `,
+    [membership, id],
+  );
+}
+
 export default {
   createUser,
   getUserByEmail,
+  updateUserMembership,
 };
