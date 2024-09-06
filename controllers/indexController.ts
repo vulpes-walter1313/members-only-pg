@@ -3,7 +3,7 @@ import HttpError from "../lib/HttpError";
 import { body, query, validationResult, matchedData } from "express-validator";
 import Posts from "../models/posts";
 import { DateTime } from "luxon";
-import Users from "../models/users";
+import * as Users from "../models/users";
 import bcrypt from "bcryptjs";
 import { type Request, type Response, type NextFunction } from "express";
 import { isLoggedIn } from "../middleware/authcheck";
@@ -169,5 +169,48 @@ export const welcomeNewMemberGet = [
   isLoggedIn,
   (req: Request, res: Response, next: NextFunction) => {
     res.render("welcomeMember", { title: `Welcome, ${req.user?.first_name}` });
+  },
+];
+
+export const becomeAdminGet = [
+  isLoggedIn,
+  (req: Request, res: Response, next: NextFunction) => {
+    res.render("becomeAdmin", {
+      title: "Do You Have What Is Takes To Be An Admin?",
+    });
+  },
+];
+
+export const becomeAdminPost = [
+  isLoggedIn,
+  body("password")
+    .notEmpty()
+    .withMessage("You need to provide a password")
+    .custom((val) => {
+      return val === process.env.ADMIN_PASSWORD!;
+    })
+    .withMessage("Password is incorrect"),
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const valResult = validationResult(req);
+    if (!valResult.isEmpty()) {
+      res.render("becomeAdmin", {
+        title: "Do You Have What Is Takes To Be An Admin?",
+        validErrors: valResult.mapped(),
+      });
+      return;
+    }
+    // password is already validated and correct here
+    await Users.updateUserAdminStatus(req.user?.id!, true);
+    res.redirect("/welcome-new-admin");
+    return;
+  }),
+];
+
+export const welcomeNewAdminGet = [
+  isLoggedIn,
+  (req: Request, res: Response, next: NextFunction) => {
+    res.render("welcomeAdmin", {
+      title: `Welcome new Admin, ${req.user?.first_name}`,
+    });
   },
 ];

@@ -16,7 +16,7 @@ type CreateUserPayload = {
   username: string;
   password: string;
 };
-async function createUser({
+export async function createUser({
   first_name,
   last_name,
   username,
@@ -31,7 +31,7 @@ async function createUser({
   );
 }
 
-async function getUserByEmail(email: string) {
+export async function getUserByEmail(email: string) {
   const { rows } = await db.query(`SELECT * FROM users WHERE username = $1`, [
     email,
   ]);
@@ -39,7 +39,7 @@ async function getUserByEmail(email: string) {
   return user;
 }
 
-async function updateUserMembership(id: string, membership: boolean) {
+export async function updateUserMembership(id: string, membership: boolean) {
   await db.query(
     `
     UPDATE users
@@ -50,8 +50,11 @@ async function updateUserMembership(id: string, membership: boolean) {
   );
 }
 
-export default {
-  createUser,
-  getUserByEmail,
-  updateUserMembership,
-};
+export async function updateUserAdminStatus(id: string, status: boolean) {
+  await db.query(
+    `UPDATE users
+    SET is_admin = $1
+    WHERE id = $2`,
+    [status, id],
+  );
+}

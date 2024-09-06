@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/navbar') %> 
+  <main class="bg-slate-950 px-4 py-14 min-h-screen flex flex-col gap-10">
+    <div class="max-w-xl mx-auto flex flex-col gap-2">
+      <h1 class="text-5xl font-bold text-slate-50 text-center"><%= title %></h1> 
+      <p class="text-slate-100 max-w-md mx-auto text-lg">With great power, comes great responsibility! If you think you got what it takes, enter the admin secret password below.</p>
+    </div>
+    <form action="/become-an-admin" method="POST" class="bg-slate-800 px-6 py-4 flex flex-col gap-4 max-w-sm w-full mx-auto rounded-md">
+      <div class="flex flex-col gap-2">
+        <label for="password" class="text-lg text-slate-50">Admins Password</label>
+        <input type="password"
+          name="password"
+          id="password"
+          required
+          class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md"
+          placeholder="********"
+          />
+          <% if (locals.validErrors && locals.validErrors.password) { %>
+            <p class="text-red-900 bg-red-100 p-2 rounded-md"><%= locals.validErrors.password.msg %></p>
+          <% } %>
+      </div>
+      <button type="submit" class="mt-4 px-6 py-2 bg-slate-100 text-slate-900 text-xl rounded-md">Join</button>
+    </form>
+  </main>
+</body>
+</html>
