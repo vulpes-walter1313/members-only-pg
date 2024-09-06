@@ -22,5 +22,6 @@ router.get("/logout", (req, res, next) => {
 });
 router.get("/membership", indexController.membershipGet);
 router.post("/membership", indexController.membershipPost);
+router.get("/welcome-new-member", indexController.welcomeNewMemberGet);
 
 export default router;

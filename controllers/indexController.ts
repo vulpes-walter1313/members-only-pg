@@ -146,6 +146,13 @@ const membershipPost = [
   }),
 ];
 
+const welcomeNewMemberGet = [
+  isLoggedIn,
+  (req: Request, res: Response, next: NextFunction) => {
+    res.render("welcomeMember", { title: `Welcome, ${req.user?.first_name}` });
+  },
+];
+
 export default {
   indexGet,
   signupGet,
@@ -153,4 +160,5 @@ export default {
   loginGet,
   membershipGet,
   membershipPost,
+  welcomeNewMemberGet,
 };
