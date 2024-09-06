@@ -43,7 +43,7 @@
           class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md"
           placeholder="ElBarto@gmail.com"
           />
-        <% if (validErrors && validErrors.username) { %>
+        <% if (locals.validErrors && locals.validErrors.username) { %>
           <p class="text-red-900 bg-red-100 p-2 rounded-md">Your email is invalid. Please use a real email..</p>
         <% } %>
       </div>
@@ -68,7 +68,7 @@
           class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md"
           placeholder="********"
           />
-        <% if (validErrors && validErrors.confirmPassword) { %>
+        <% if (locals.validErrors && locals.validErrors.confirmPassword) { %>
           <p class="text-red-900 bg-red-100 p-2 rounded-md">Your passwords don&apos;t match.</p>
         <% } %>
         <p></p>
