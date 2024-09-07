@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/navbar') %> 
+  <main class="bg-slate-950 px-4 py-14 min-h-screen flex flex-col gap-10">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-5xl font-bold text-slate-50 text-center"><%= title %></h1> 
+    </div>
+    <form action="/posts/create" method="POST" class="bg-slate-800 px-6 py-4 flex flex-col gap-4 max-w-sm w-full mx-auto rounded-md">
+      <div class="flex flex-col gap-2">
+        <label for="title" class="text-lg text-slate-50">Title</label>
+        <input type="text"
+          name="title"
+          id="title"
+          required
+          maxlength="256"
+          minlength="3"
+          class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md"
+          placeholder="The scariest story ever told!"
+          />
+        <% if (locals.validErrors && locals.validErrors.title) { %>
+          <p class="text-red-900 bg-red-100 p-2 rounded-md"><%= locals.validErrors.title.msg%></p>
+        <% } %>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="body" class="text-lg text-slate-50">Write your story</label>
+        <textarea
+          name="body"
+          id="body"
+          required
+          maxlength="2048"
+          class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md h-40"
+          placeholder="It was a dark and stormy night..."
+          ></textarea>
+        <% if (locals.validErrors && locals.validErrors.body) { %>
+          <p class="text-red-900 bg-red-100 p-2 rounded-md"><%= locals.validErrors.body.msg%></p>
+        <% } %>
+      </div>
+      <button type="submit" class="mt-4 px-6 py-2 bg-slate-100 text-slate-900 text-xl rounded-md">Join</button>
+    </form>
+  </main>
+</body>
+</html>

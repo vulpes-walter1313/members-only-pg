@@ -9,7 +9,11 @@ type PostObject = {
   created_at: Date;
   updated_at: Date;
 };
-async function getPosts(isAnonymous: boolean, page: number, limit: number) {
+export async function getPosts(
+  isAnonymous: boolean,
+  page: number,
+  limit: number,
+) {
   const offset = (page <= 0 ? 1 : page - 1) * limit;
 
   if (isAnonymous) {
@@ -29,7 +33,7 @@ async function getPosts(isAnonymous: boolean, page: number, limit: number) {
     FETCH FIRST $2 ROWS ONLY`,
       [offset, limit],
     );
-    console.log(rows);
+    // console.log("models/posts.ts", rows);
     return rows as PostObject[];
   } else {
     const { rows } = await db.query(
@@ -48,17 +52,35 @@ async function getPosts(isAnonymous: boolean, page: number, limit: number) {
     FETCH FIRST $2 ROWS ONLY`,
       [offset, limit],
     );
-    console.log(rows);
+    // console.log("models/posts ", rows);
     return rows as PostObject[];
   }
 }
 
-async function getPostsCount() {
+export async function getPostsCount() {
   const { rows } = await db.query(`SELECT COUNT(id) AS count FROM posts`);
   return rows[0].count as number;
 }
 
-export default {
-  getPosts,
-  getPostsCount,
+type CreatePostPayload = {
+  author_id: string;
+  title: string;
+  body: string;
 };
+export async function createPost({
+  author_id,
+  title,
+  body,
+}: CreatePostPayload) {
+  const { rows } = await db.query(
+    `INSERT INTO
+    posts (author_id, title, body)
+    VALUES
+    ($1, $2, $3)
+    RETURNING id
+`,
+    [author_id, title, body],
+  );
+  const id = rows[0].id as number;
+  return id;
+}

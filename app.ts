@@ -8,6 +8,7 @@ import http from "node:http";
 import HttpError from "./lib/HttpError";
 import path from "node:path";
 import indexRouter from "./routes/indexRouter";
+import postRouter from "./routes/postRouter";
 import session from "express-session";
 import passport from "passport";
 import LocalStrategy from "passport-local";
@@ -94,6 +95,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/", indexRouter);
+app.use("/posts", postRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
