@@ -84,3 +84,43 @@ export async function createPost({
   const id = rows[0].id as number;
   return id;
 }
+
+export async function getPostById(id: number, canViewAllData: boolean) {
+  if (canViewAllData) {
+    const { rows } = await db.query(
+      `SELECT
+    posts.id,
+    author_id,
+    CONCAT(users.first_name, ' ', users.last_name) AS author_name,
+    title,
+    body,
+    created_at,
+    updated_at
+    FROM posts
+    JOIN users ON
+    posts.author_id = users.id
+    WHERE posts.id = $1`,
+      [id],
+    );
+    const post = rows[0] as PostObject | undefined;
+    return post;
+  } else {
+    const { rows } = await db.query(
+      `SELECT
+    posts.id,
+    author_id,
+    'Anonymous' AS author_name,
+    title,
+    body,
+    created_at,
+    updated_at
+    FROM posts
+    JOIN users ON
+    posts.author_id = users.id
+    WHERE posts.id = $1`,
+      [id],
+    );
+    const post = rows[0] as PostObject | undefined;
+    return post;
+  }
+}
