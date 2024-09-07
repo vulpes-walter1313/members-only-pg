@@ -8,6 +8,7 @@ import bcrypt from "bcryptjs";
 import { type Request, type Response, type NextFunction } from "express";
 import { isLoggedIn } from "../middleware/authcheck";
 import passport from "passport";
+import he from "he";
 
 export const indexGet = [
   query("page").optional().isInt(),
@@ -32,6 +33,8 @@ export const indexGet = [
     const displayPosts = posts.map((post) => {
       return {
         ...post,
+        title: he.decode(post.title),
+        body: he.decode(post.body),
         created_at: DateTime.fromJSDate(post.created_at).toLocaleString(
           DateTime.DATETIME_MED,
         ),
