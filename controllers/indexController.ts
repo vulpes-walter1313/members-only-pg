@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import HttpError from "../lib/HttpError";
 import { body, query, validationResult, matchedData } from "express-validator";
-import Posts from "../models/posts";
+import * as Posts from "../models/posts";
 import { DateTime } from "luxon";
 import * as Users from "../models/users";
 import bcrypt from "bcryptjs";
