@@ -10,7 +10,7 @@ import { DateTime } from "luxon";
 export const createPostGet = [
   isLoggedIn,
   (req: Request, res: Response, next: NextFunction) => {
-    res.render("postForm", { title: "What's your story?" });
+    res.render("postFormCreate", { title: "What's your story?" });
   },
 ];
 export const createPostPost = [
@@ -28,7 +28,7 @@ export const createPostPost = [
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const valResult = validationResult(req);
     if (!valResult.isEmpty()) {
-      res.status(400).render("postForm", {
+      res.status(400).render("postFormCreate", {
         title: "What's Your Story?",
         validErrors: valResult.mapped(),
       });
@@ -86,5 +86,124 @@ export const postViewGet = [
       next(error);
       return;
     }
+  }),
+];
+
+// /posts/:postId/update
+export const postUpdateGet = [
+  isLoggedIn,
+  param("postId").isInt(),
+  asyncHandler(async (req, res, next) => {
+    const valResult = validationResult(req);
+    if (!valResult.isEmpty()) {
+      const err = new HttpError("Resource didn't pass validation", 400);
+      next(err);
+      return;
+    }
+
+    const data = matchedData(req);
+    const postId = parseInt(data.postId);
+    // get post
+    const post = await Posts.getPostById(postId, true);
+
+    if (!post) {
+      const error = new HttpError("Post doesn't exist", 404);
+      next(error);
+      return;
+    }
+    // verify current user is either admin or the post author
+    const canSeePage = req.user?.is_admin || req.user?.id === post?.author_id;
+
+    if (canSeePage) {
+      // if admin or post author, show the page
+      res.render("postForm", {
+        title: "Update you story.",
+        post: {
+          id: post.id,
+          title: he.decode(post.title),
+          body: he.decode(post.body),
+        },
+      });
+      return;
+    } else {
+      // if not admin or post author, send error page.
+      const error = new HttpError("You are not authorized", 403);
+      next(error);
+      return;
+    }
+  }),
+];
+
+// POST /posts/:postId/update
+export const postUpdatePost = [
+  isLoggedIn,
+  body("title")
+    .trim()
+    .isLength({ min: 1, max: 256 })
+    .withMessage("Title must be between 1 and 256 characters")
+    .escape(),
+  body("body")
+    .trim()
+    .isLength({ min: 1, max: 2048 })
+    .withMessage("Story must be between 1 and 2048 characters")
+    .escape(),
+  param("postId").isInt(),
+  asyncHandler(async (req, res, next) => {
+    const valResult = validationResult(req);
+    const data = matchedData(req);
+    let postId: number;
+    if (!valResult.isEmpty()) {
+      const validErrors = valResult.mapped();
+      if (validErrors?.postId) {
+        const error = new HttpError("postId is invalid", 400);
+        next(error);
+        return;
+      }
+
+      postId = parseInt(data.postId);
+      const post = await Posts.getPostById(postId, true);
+      if (!post) {
+        const error = new HttpError("Post doest not exist.", 404);
+        next(error);
+        return;
+      }
+      const canEdit = req.user?.is_admin || req.user?.id === post?.author_id;
+      if (!canEdit) {
+        const error = new HttpError(
+          "You are not authorized to edit this post",
+          403,
+        );
+        next(error);
+        return;
+      }
+      res.render("postForm", {
+        title: "Update Your Story!",
+        post: {
+          id: post.id,
+          title: he.decode(data.title),
+          body: he.decode(data.body),
+        },
+      });
+      return;
+    }
+    // all validation passes.
+    postId = parseInt(data.postId);
+    const post = await Posts.getPostById(postId, true);
+    if (!post) {
+      const error = new HttpError("Post does not exist", 404);
+      next(error);
+      return;
+    }
+    const canEdit = req.user?.is_admin || req.user?.id === post?.author_id;
+    if (!canEdit) {
+      const error = new HttpError(
+        "You are not authorized to edit this post",
+        403,
+      );
+      next(error);
+      return;
+    }
+    await Posts.updatePostById(post.id, { title: data.title, body: data.body });
+    res.redirect(`/posts/${post.id}`);
   }),
 ];

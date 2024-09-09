@@ -9,7 +9,7 @@
     <div class="max-w-4xl mx-auto">
       <h1 class="text-5xl font-bold text-slate-50 text-center"><%= title %></h1> 
     </div>
-    <form action="/posts/<%= post.id %>/update" method="POST" class="bg-slate-800 px-6 py-4 flex flex-col gap-4 max-w-sm w-full mx-auto rounded-md">
+    <form action="/posts/create" method="POST" class="bg-slate-800 px-6 py-4 flex flex-col gap-4 max-w-sm w-full mx-auto rounded-md">
       <div class="flex flex-col gap-2">
         <label for="title" class="text-lg text-slate-50">Title</label>
         <input type="text"
@@ -20,7 +20,6 @@
           minlength="3"
           class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md"
           placeholder="The scariest story ever told!"
-          value="<%= locals?.post?.title ? locals.post.title : "" %>"
           />
         <% if (locals.validErrors && locals.validErrors.title) { %>
           <p class="text-red-900 bg-red-100 p-2 rounded-md"><%= locals.validErrors.title.msg%></p>
@@ -35,12 +34,12 @@
           maxlength="2048"
           class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md h-40"
           placeholder="It was a dark and stormy night..."
-          ><%= locals?.post?.body ? locals?.post?.body : "" %></textarea>
+          ></textarea>
         <% if (locals.validErrors && locals.validErrors.body) { %>
           <p class="text-red-900 bg-red-100 p-2 rounded-md"><%= locals.validErrors.body.msg%></p>
         <% } %>
       </div>
-      <button type="submit" class="mt-4 px-6 py-2 bg-slate-100 text-slate-900 text-xl rounded-md">update</button>
+      <button type="submit" class="mt-4 px-6 py-2 bg-slate-100 text-slate-900 text-xl rounded-md">Join</button>
     </form>
   </main>
 </body>

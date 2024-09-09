@@ -124,3 +124,22 @@ export async function getPostById(id: number, canViewAllData: boolean) {
     return post;
   }
 }
+
+type UpdatePostByIdPayload = {
+  title: string;
+  body: string;
+};
+export async function updatePostById(
+  id: number,
+  { title, body }: UpdatePostByIdPayload,
+) {
+  await db.query(
+    `UPDATE posts
+    SET
+      title = $1,
+      body = $2,
+      updated_at = CURRENT_TIMESTAMP
+    WHERE id = $3`,
+    [title, body, id],
+  );
+}
