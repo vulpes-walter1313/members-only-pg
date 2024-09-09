@@ -28,7 +28,7 @@ export async function getPosts(
       updated_at
     FROM posts
     JOIN users ON posts.author_id = users.id
-    ORDER BY updated_at
+    ORDER BY updated_at DESC
     OFFSET $1
     FETCH FIRST $2 ROWS ONLY`,
       [offset, limit],
@@ -47,7 +47,7 @@ export async function getPosts(
       updated_at
     FROM posts
     JOIN users ON posts.author_id = users.id
-    ORDER BY updated_at
+    ORDER BY updated_at DESC
     OFFSET $1
     FETCH FIRST $2 ROWS ONLY`,
       [offset, limit],
