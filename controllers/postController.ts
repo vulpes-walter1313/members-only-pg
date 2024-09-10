@@ -207,3 +207,72 @@ export const postUpdatePost = [
     res.redirect(`/posts/${post.id}`);
   }),
 ];
+
+// GET /posts/:postId/delete
+export const deletePostGet = [
+  isLoggedIn,
+  param("postId").isInt(),
+  asyncHandler(async (req, res, next) => {
+    const valResult = validationResult(req);
+    const data = matchedData(req);
+    if (!valResult.isEmpty()) {
+      const error = new HttpError("postId is not valid", 400);
+      next(error);
+      return;
+    }
+    const postId = parseInt(data.postId);
+    const post = await Posts.getPostById(postId, true);
+    if (!post) {
+      next(new HttpError("Post does not exist", 404));
+      return;
+    }
+    const canDelete = req.user?.is_admin || req.user?.id === post.author_id;
+    if (!canDelete) {
+      next(new HttpError("You are not authorized to delete this post", 403));
+      return;
+    }
+    res.render("postDelete", {
+      title: "Are You Sure You Want To Delete This Post?",
+      post: {
+        id: post.id,
+        author_name: he.decode(post.author_name),
+        title: he.decode(post.title),
+        body: he.decode(post.body),
+        created_at: DateTime.fromJSDate(post.created_at).toLocaleString(
+          DateTime.DATETIME_MED,
+        ),
+        updated_at: DateTime.fromJSDate(post.updated_at).toLocaleString(
+          DateTime.DATETIME_MED,
+        ),
+      },
+    });
+  }),
+];
+// POST /posts/:postId/delete
+export const deletePostPost = [
+  isLoggedIn,
+  body("postId").isInt(),
+  asyncHandler(async (req, res, next) => {
+    const valResult = validationResult(req);
+    const data = matchedData(req);
+    if (!valResult.isEmpty()) {
+      const error = new HttpError("postId is not valid", 400);
+      next(error);
+      return;
+    }
+    const postId = parseInt(data.postId);
+
+    const post = await Posts.getPostById(postId, true);
+    if (!post) {
+      next(new HttpError("Post Doesn't exist", 400));
+      return;
+    }
+    const canDelete = req.user?.is_admin || req.user?.id === post.author_id;
+    if (!canDelete) {
+      next(new HttpError("You are not authorized", 403));
+      return;
+    }
+    await Posts.deletePostById(post.id);
+    res.redirect("/");
+  }),
+];

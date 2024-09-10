@@ -143,3 +143,7 @@ export async function updatePostById(
     [title, body, id],
   );
 }
+
+export async function deletePostById(id: number) {
+  await db.query(`DELETE FROM posts WHERE id = $1`, [id]);
+}
