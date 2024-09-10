@@ -23,7 +23,11 @@ export async function getPosts(
       author_id,
       'Anonymous' AS author_name,
       title,
-      LEFT(body, 256) AS body,
+      CASE
+        WHEN LENGTH(body) > 256
+        THEN CONCAT(LEFT(body, 256), '...')
+        ELSE body
+      END AS body,
       created_at,
       updated_at
     FROM posts
@@ -42,7 +46,11 @@ export async function getPosts(
       author_id,
       CONCAT(users.first_name, ' ', users.last_name) AS author_name,
       title,
-      LEFT(body, 256) AS body,
+      CASE
+        WHEN LENGTH(body) > 256
+        THEN CONCAT(LEFT(body, 256), '...')
+        ELSE body
+      END AS body,
       created_at,
       updated_at
     FROM posts
