@@ -11,11 +11,12 @@
       <div class="bg-slate-800 p-4 rounded-md flex flex-col gap-6">
         <div class="text-slate-50">
           <p class="font-medium"><%= post.author_name%></p>
-          <p class="text-sm font-light">Posted on <%= post.created_at %></p>
+          <p class="text-sm font-light text-slate-300">Posted on <%= post.created_at %></p>
+          <p class="text-sm font-light text-slate-300">Last updated: <%= post.created_at %></p>
         </div>
         <div class="text-slate-100 flex flex-col gap-2">
           <h1 class="text-3xl font-bold"><%= post.title %></h1>
-          <p class="whitespace-pre-line"><%= post.body %>...</p>
+          <p class="whitespace-pre-line"><%= post.body %></p>
         </div>
       </div>
     </div>
