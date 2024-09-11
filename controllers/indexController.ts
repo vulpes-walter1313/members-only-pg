@@ -81,10 +81,6 @@ export const signupPost = [
     const valResult = validationResult(req);
     const data = matchedData(req);
     if (!valResult.isEmpty()) {
-      console.log(
-        "indexController signupPost validErrors: ",
-        valResult.mapped(),
-      );
       res.status(400).render("signup", {
         title: "Sign Up To Our VIP message Board",
         validErrors: valResult.mapped(),
