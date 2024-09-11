@@ -79,6 +79,7 @@ export const signupPost = [
   }),
   asyncHandler(async (req, res, next) => {
     const valResult = validationResult(req);
+    const data = matchedData(req);
     if (!valResult.isEmpty()) {
       console.log(
         "indexController signupPost validErrors: ",
@@ -87,6 +88,9 @@ export const signupPost = [
       res.status(400).render("signup", {
         title: "Sign Up To Our VIP message Board",
         validErrors: valResult.mapped(),
+        firstName: data.first_name,
+        lastName: data.last_name,
+        username: data.username,
       });
       return;
     }

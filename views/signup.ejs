@@ -19,6 +19,7 @@
           minlength="3"
           class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md"
           placeholder="Bart"
+          value="<%= locals.firstName ? locals.firstName : "" %>"
           />
       </div>
       <div class="flex flex-col gap-2">
@@ -30,6 +31,7 @@
           minlength="3"
           class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md"
           placeholder="Simpson"
+          value="<%= locals.lastName ? locals.lastName : "" %>"
           />
       </div>
       <div class="flex flex-col gap-2">
@@ -42,6 +44,7 @@
           minlength="1"
           class="bg-white text-slate-900 placeholder:text-slate-500 px-4 py-2 rounded-md"
           placeholder="ElBarto@gmail.com"
+          value="<%= locals.username ? locals.username : ""%>"
           />
         <% if (locals.validErrors && locals.validErrors.username) { %>
           <p class="text-red-900 bg-red-100 p-2 rounded-md">Your email is invalid. Please use a real email..</p>
