@@ -3,15 +3,24 @@ import { Client } from "pg";
 import { type UserObject } from "../models/users";
 import { faker } from "@faker-js/faker";
 import bcrypt from "bcryptjs";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 async function main() {
-  console.log(process.env.DB_URI);
-  const client = new Client({ connectionString: process.env.DB_URI });
+  const connectionString = process.argv[2];
+  console.log(connectionString);
+  const client = new Client({ connectionString: connectionString });
 
   try {
     console.log("connecting to db...");
     await client.connect();
     console.log("Connected to db");
+    const initFilePath = path.join(__dirname, "initDB.sql");
+    const initDbContent = await fs.readFile(initFilePath, { encoding: "utf8" });
+    console.log("initializing database...");
+    console.log("Initializing Database...");
+    await client.query(initDbContent);
+    console.log("Database Initialized\n");
     const users: Pick<
       UserObject,
       "first_name" | "last_name" | "username" | "password"
