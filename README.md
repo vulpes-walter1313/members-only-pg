@@ -2,7 +2,6 @@
 
 This project is an exercise from [the odin project](https://www.theodinproject.com/lessons/node-path-nodejs-members-only).
 
-
 ## Starting a dev enviroment
 
 There are several scripts that need to be ran at the same time manually. I tried concurrently but ran into some issues, but running them manually seemed to do the trick.
@@ -13,13 +12,19 @@ The commands areas follows:
 npm run dev
 
 npm run tw-watch
-
-npm run watch-cpa
-
 ```
 
 Run the commands above in different terminals. Once they are all running, any changes will reflect in the project.
 
+## initializing db and populating
+
+There is a script `/db/populate.ts`, that initialized the db with the tables needed and populates it with fakerjs data.
+
+you can call it like so...
+
+```bash
+npx tsx ./db/populate.ts <postgres url>
+```
 
 ## Models
 
@@ -57,15 +62,6 @@ CREATE TABLE IF NOT EXISTS posts (
     ON DELETE CASCADE
 );
 ```
-
-### Users Module
-
-This module will take care of working on the `users` db table
-
-#### createUser
-
-Arguments:
-
 
 ## Routes
 
@@ -138,7 +134,7 @@ On success, this grants the logged in user `is_admin = true` in the `users` db t
 
 This route will return a page that shows a screen welcoming a logged in user for becoming a member. This is the landing page after successfully becoming a member in the `/membership` route.
 
-### GET `/post/create`
+### GET `/posts/create`
 
 This route will return a page with an html form to create a post. The form should have the following inputs
 
@@ -147,7 +143,7 @@ This route will return a page with an html form to create a post. The form shoul
 
 `title` should be a max length of 256 characters. `body` should be a max length of 2048 characters.
 
-### POST `/post/create`
+### POST `/posts/create`
 
 This route will validate and escape the user data to pass onto the DB.
 
@@ -160,7 +156,7 @@ It will receive the following body as url encoded body
 }
 ```
 
-### GET `/post/:postId`
+### GET `/posts/:postId`
 
 #### user logged in AND is a member
 
@@ -186,18 +182,18 @@ The post will be displayed with the author will be 'Anonymous'. The data will be
 
 Aside from seeing all of the post information, there will be buttons to edit and delete the post.
 
-### GET `/post/:postId/update`
+### GET `/posts/:postId/update`
 
 If user is the author or admin, this route will send an html form that's the same as GET `/post/create`. If user is not author, admin, or logged in user then user will be redirected to `/`.
 
-### POST `/post/:postId/update`
+### POST `/posts/:postId/update`
 
 This route will validate and escape the data. On success, it will update the post data in the DB. On failure, it will rerender the GET `/post/:postId/update` route.
 
-### GET `/post/:postId/delete`
+### GET `/posts/:postId/delete`
 
 This returns a page to confirm if you really want to delete a page. If user is not author, admin, or logged in user then user will be redirected to `/`.
 
-### POST `/post/:postId/delete`
+### POST `/posts/:postId/delete`
 
 this route will verify that the user can delete the post. if not redirect them to `/`.

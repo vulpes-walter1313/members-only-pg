@@ -6,12 +6,12 @@
   "private": "true",
   "scripts": {
     "tw-watch": "tailwindcss -i ./public/stylesheets/tailwind.css -o ./public/stylesheets/styles.css --watch",
-    "build": "rm -frv ./dist && tsc && tailwindcss -i ./public/stylesheets/tailwind.css -o ./public/stylesheets/styles.css",
-    "dev": "tsx watch app.ts",
+    "build": "rm -frv ./dist && tsc && tailwindcss -i ./public/stylesheets/tailwind.css -o ./public/stylesheets/styles.css && cp -rv views dist/views && cp -rv public dist/public",
+    "dev": "NODE_ENV=development tsx watch app.ts",
     "cpa": "rsync -avhP --delete ./public/ ./dist/public/ && rsync -avhP --delete ./views/ ./dist/views/",
     "watch-cpa": "npm-watch cpa",
     "prettier": "prettier . --write",
-    "start": "node ./dist/app.js"
+    "start": "NODE_ENV=production node ./dist/app.js"
   },
   "watch": {
     "cpa": {
