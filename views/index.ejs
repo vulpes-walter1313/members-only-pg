@@ -15,8 +15,22 @@
           <!-- Sidebar-->
           <p class="text-xl font-medium">Go To Shortcuts</p>
           <div class="flex flex-col">
-            <a href="/membership">Become A Member</a>
-            <a href="/become-an-admin">Become An Admin</a>
+            <% if (locals.currentUser.is_member) { %>
+              <div class="flex gap-2 items-center">
+                <svg class="fill-slate-300" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg" style="--darkreader-inline-fill: currentColor; --darkreader-inline-stroke: currentColor;" data-darkreader-inline-fill="" data-darkreader-inline-stroke=""><path fill="none" d="M0 0h24v24H0z"></path><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
+                <p class="font-medium text-slate-300">You are a Member</p>
+              </div>
+            <% } else { %>
+              <a href="/membership" class="text-amber-400 underline">Become A Member</a>
+            <% } %>
+            <% if (locals.currentUser.is_admin) { %>
+              <div class="flex gap-2 items-center">
+                <svg class="fill-slate-300" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 640 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg" style="--darkreader-inline-fill: currentColor; --darkreader-inline-stroke: currentColor;" data-darkreader-inline-fill="" data-darkreader-inline-stroke=""><path d="M528 448H112c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h416c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm64-320c-26.5 0-48 21.5-48 48 0 7.1 1.6 13.7 4.4 19.8L476 239.2c-15.4 9.2-35.3 4-44.2-11.6L350.3 85C361 76.2 368 63 368 48c0-26.5-21.5-48-48-48s-48 21.5-48 48c0 15 7 28.2 17.7 37l-81.5 142.6c-8.9 15.6-28.9 20.8-44.2 11.6l-72.3-43.4c2.7-6 4.4-12.7 4.4-19.8 0-26.5-21.5-48-48-48S0 149.5 0 176s21.5 48 48 48c2.6 0 5.2-.4 7.7-.8L128 416h384l72.3-192.8c2.5.4 5.1.8 7.7.8 26.5 0 48-21.5 48-48s-21.5-48-48-48z"></path></svg>
+                <p class="font-medium text-slate-300">You are an Admin</p>
+              </div>
+            <% } else { %>
+              <a href="/become-an-admin" class="text-amber-400 underline">Become An Admin</a>
+            <% } %>
           </div>
           <a href="/posts/create" class="px-6 py-2 bg-slate-100 text-slate-900 text-lg self-start rounded-md">Create Post</a>
         </div>
