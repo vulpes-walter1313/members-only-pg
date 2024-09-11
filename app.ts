@@ -16,6 +16,9 @@ import db from "./db/pool";
 import bcrypt from "bcryptjs";
 import pgSimple from "connect-pg-simple";
 import logger from "morgan";
+import helmet from "helmet";
+import compression from "compression";
+import { rateLimit } from "express-rate-limit";
 const pgSession = pgSimple(session);
 // const pgSession = require("connect-pg-simple")(session)
 
@@ -28,7 +31,19 @@ app.set("port", PORT);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(logger("dev"));
+if (process.env.NODE_ENV === "production") {
+  app.use(logger("tiny"));
+  app.use(helmet());
+  app.use(compression());
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 100,
+    legacyHeaders: false,
+  });
+  app.use(limiter);
+} else {
+  app.use(logger("dev"));
+}
 app.use(
   session({
     secret: process.env.SESSION_SECRET!,
