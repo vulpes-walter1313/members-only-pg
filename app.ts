@@ -32,6 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 if (process.env.NODE_ENV === "production") {
+  app.set('trust proxy', 1);
   app.use(logger("tiny"));
   app.use(helmet());
   app.use(compression());
